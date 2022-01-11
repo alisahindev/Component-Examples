@@ -1,4 +1,4 @@
-import React from "react";
+import React, { KeyboardEventHandler, useEffect } from "react";
 import CustomSelectStyle from "./CustomSelect.module.scss";
 import { ArrowIcons } from "./ArrowIcons";
 
@@ -34,8 +34,14 @@ function CustomSelect(props: RecommendedProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(value);
   const [selectedLabel, setSelectedLabel] = React.useState("" as string);
+  const [selectedIndex, setSelectedIndex] = React.useState<null | number>(null);
   const [optionsMutation, setOptionsMutation] = React.useState(options);
+
   const { arrowDown } = ArrowIcons();
+
+  useEffect(() => {
+    scrollToIndex(selectedIndex!);
+  }, [selectedIndex, optionsMutation]);
 
   const handleChangeSearch = React.useCallback(
     (e) => {
@@ -52,17 +58,57 @@ function CustomSelect(props: RecommendedProps) {
     [options, isOpen]
   );
 
-  const handleOnKeyPress = React.useCallback((e) => {
-    if (e.key === "Enter") {
-      setIsOpen(false);
-      console.log("key press");
+  const scrollToIndex = React.useCallback((optionIndex: number) => {
+    if (optionIndex && optionIndex > -1) {
+      const element = document.querySelectorAll(`.${CustomSelectStyle.option}`)[
+        optionIndex
+      ];
+      if (element) {
+        element.scrollIntoView({
+          block: "nearest",
+        });
+      }
     }
   }, []);
 
+  const handleOnKeyPress: KeyboardEventHandler = React.useCallback(
+    (e) => {
+      if (e.key === "Enter") {
+        setSelectedLabel(optionsMutation![selectedIndex!].label);
+        setSelectedValue(optionsMutation![selectedIndex!].value);
+        setIsOpen((isOpen) => !isOpen);
+      }
+    },
+    [selectedIndex, optionsMutation]
+  );
+
+  const handleKeyDown: KeyboardEventHandler = React.useCallback(
+    (e) => {
+      if (e.key === "ArrowDown") {
+        selectedIndex === null || selectedIndex === optionsMutation!.length - 1
+          ? setSelectedIndex(0)
+          : setSelectedIndex((selectedIndex) => selectedIndex! + 1);
+      }
+    },
+    [selectedIndex, optionsMutation]
+  );
+
+  const handleKeyUp: KeyboardEventHandler = React.useCallback(
+    (e) => {
+      if (e.key === "ArrowUp") {
+        selectedIndex === null || selectedIndex === 0
+          ? setSelectedIndex(optionsMutation!.length - 1)
+          : setSelectedIndex((selectedIndex) => selectedIndex! - 1);
+      }
+    },
+    [selectedIndex, optionsMutation]
+  );
+
   const handleSelect = React.useCallback(
-    (option: option) => {
+    (option: option, optionIndex) => {
       setSelectedValue(option.value);
       setSelectedLabel(option.label);
+      setSelectedIndex(optionIndex);
       setIsOpen(false);
       onChange(option.value);
     },
@@ -75,10 +121,8 @@ function CustomSelect(props: RecommendedProps) {
       title: option.label,
       role: "option",
       "aria-selected": selectedValue === option.value,
-      className: `${CustomSelectStyle.option} ${className ? className : ""}`,
-      onKeyPress: handleOnKeyPress,
       onClick: () => {
-        handleSelect(option);
+        handleSelect(option, i);
       },
     };
   };
@@ -92,7 +136,8 @@ function CustomSelect(props: RecommendedProps) {
       style: {
         width: props.width && props.width + "px",
       },
-
+      onKeyDown: handleKeyDown,
+      onKeyUp: handleKeyUp,
       placeholder: selectedLabel || placeholder,
       title: selectedLabel,
       value: selectedLabel || "",
@@ -104,7 +149,11 @@ function CustomSelect(props: RecommendedProps) {
   };
 
   return (
-    <div className={CustomSelectStyle.select} aria-haspopup='true'>
+    <div
+      className={CustomSelectStyle.select}
+      aria-haspopup='true'
+      aria-autocomplete='list'
+    >
       <label
         htmlFor='select'
         className={`${CustomSelectStyle.icon} ${
@@ -113,7 +162,12 @@ function CustomSelect(props: RecommendedProps) {
       >
         {arrowDown}
       </label>
-      <input {...getSelectInputProps()} type='text' id='select' />
+      <input
+        {...getSelectInputProps()}
+        type='text'
+        id='select'
+        onKeyPress={(e) => handleOnKeyPress(e)}
+      />
 
       <ul
         className={CustomSelectStyle.selectOptions}
@@ -122,9 +176,19 @@ function CustomSelect(props: RecommendedProps) {
         role='listbox'
       >
         {optionsMutation &&
-          optionsMutation.map((option, i) => (
-            <li {...getOptionProps(option, i)}>{option.label}</li>
-          ))}
+          optionsMutation.map((option, optionIndex) => {
+            const isSelected = selectedIndex === optionIndex;
+            return (
+              <li
+                {...getOptionProps(option, optionIndex)}
+                className={`${CustomSelectStyle.option} 
+                ${className ? className : ""} 
+                ${isSelected ? CustomSelectStyle.selected : ""}`}
+              >
+                {option.label}
+              </li>
+            );
+          })}
       </ul>
     </div>
   );
