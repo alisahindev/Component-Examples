@@ -35,8 +35,8 @@ function CustomSelect(props: RecommendedProps) {
   const [selectedValue, setSelectedValue] = React.useState(value);
   const [selectedLabel, setSelectedLabel] = React.useState("" as string);
   const [optionsMutation, setOptionsMutation] = React.useState(options);
+  const { arrowDown } = ArrowIcons();
 
-  const { arrowUp, arrowDown } = ArrowIcons();
   const handleChangeSearch = React.useCallback(
     (e) => {
       if (!isOpen) {
@@ -49,8 +49,15 @@ function CustomSelect(props: RecommendedProps) {
       );
       setOptionsMutation(_option);
     },
-    [options]
+    [options, isOpen]
   );
+
+  const handleOnKeyPress = React.useCallback((e) => {
+    if (e.key === "Enter") {
+      setIsOpen(false);
+      console.log("key press");
+    }
+  }, []);
 
   const handleSelect = React.useCallback(
     (option: option) => {
@@ -66,7 +73,10 @@ function CustomSelect(props: RecommendedProps) {
     return {
       key: `${option.value}-${i}`,
       title: option.label,
+      role: "option",
+      "aria-selected": selectedValue === option.value,
       className: `${CustomSelectStyle.option} ${className ? className : ""}`,
+      onKeyPress: handleOnKeyPress,
       onClick: () => {
         handleSelect(option);
       },
@@ -82,6 +92,8 @@ function CustomSelect(props: RecommendedProps) {
       style: {
         width: props.width && props.width + "px",
       },
+
+      placeholder: selectedLabel || placeholder,
       title: selectedLabel,
       value: selectedLabel || "",
       disabled: disabled,
@@ -92,23 +104,22 @@ function CustomSelect(props: RecommendedProps) {
   };
 
   return (
-    <div className={CustomSelectStyle.select} aria-haspopup="true">
-      <input
-        {...getSelectInputProps()}
-        type="text"
-        placeholder={selectedLabel || placeholder}
-      />
-      <span
+    <div className={CustomSelectStyle.select} aria-haspopup='true'>
+      <label
+        htmlFor='select'
         className={`${CustomSelectStyle.icon} ${
           isOpen ? CustomSelectStyle.open : ""
         }`}
       >
         {arrowDown}
-      </span>
+      </label>
+      <input {...getSelectInputProps()} type='text' id='select' />
+
       <ul
         className={CustomSelectStyle.selectOptions}
         style={isOpen ? { display: "block" } : { display: "none" }}
-        aria-label="submenu"
+        aria-label='submenu'
+        role='listbox'
       >
         {optionsMutation &&
           optionsMutation.map((option, i) => (

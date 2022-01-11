@@ -9,7 +9,7 @@
   border: 1px solid #ccc;
   border-radius: 0.25rem;
   outline: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 2rem 0.5rem 1rem;
   cursor: pointer;
   min-width: 10rem;
   transition: background-color 0.2s ease-in-out;
@@ -44,17 +44,19 @@
 
 .icon {
   position: absolute;
-  right: 1rem;
-  top: 50%;
-  width: 24px;
-  height: 24px;
+  right: 0.5rem;
+  bottom: 25%;
+  width: 20px;
   color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease-in-out;
-  z-index: 1;
-}
-
-.open {
-  transform: rotate(180deg);
+  cursor: pointer;
+  z-index: 0;
+  &.open {
+    transform: rotate(180deg);
+  }
 }
 
 .primary {
