@@ -1,3 +1,7 @@
+# Hi I'm Ali 
+
+This repository is a project I created and continue to develop to learn more about form elements.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
