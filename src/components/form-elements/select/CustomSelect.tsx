@@ -1,8 +1,9 @@
 import React from "react";
 import CustomSelectStyle from "./CustomSelect.module.scss";
+import { ArrowIcons } from "./ArrowIcons";
 
 type option = {
-  value: string;
+  value: string | number;
   label: string;
 };
 
@@ -11,18 +12,17 @@ type variants = "primary" | "secondary" | "success" | "danger" | "warning";
 type RecommendedProps = {
   options?: option[];
   onChange: (value: any) => void;
-  value?: string;
-  label?: string;
+  value?: string | number;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
   variant?: variants;
+  width?: string;
 };
 
 function CustomSelect(props: RecommendedProps) {
   const {
     className,
-    label,
     placeholder,
     options,
     value,
@@ -33,47 +33,92 @@ function CustomSelect(props: RecommendedProps) {
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(value);
-  const [selectedLabel, setSelectedLabel] = React.useState(label);
+  const [selectedLabel, setSelectedLabel] = React.useState("" as string);
+  const [optionsMutation, setOptionsMutation] = React.useState(options);
 
-  const getOptionProps = (option: option) => {
+  const { arrowUp, arrowDown } = ArrowIcons();
+  const handleChangeSearch = React.useCallback(
+    (e) => {
+      if (!isOpen) {
+        setIsOpen(true);
+      }
+      const _value = e.target.value;
+      setSelectedLabel(_value);
+      const _option = options?.filter((option) =>
+        option.label.toLowerCase().includes(_value.toLowerCase())
+      );
+      setOptionsMutation(_option);
+    },
+    [options]
+  );
+
+  const handleSelect = React.useCallback(
+    (option: option) => {
+      setSelectedValue(option.value);
+      setSelectedLabel(option.label);
+      setIsOpen(false);
+      onChange(option.value);
+    },
+    [onChange]
+  );
+
+  const getOptionProps = (option: option, i: any) => {
     return {
-      key: option.value,
-      className: CustomSelectStyle.option,
+      key: `${option.value}-${i}`,
+      title: option.label,
+      className: `${CustomSelectStyle.option} ${className ? className : ""}`,
       onClick: () => {
-        setSelectedValue(option.value);
-        setSelectedLabel(option.label);
-        setIsOpen(false);
+        handleSelect(option);
       },
     };
   };
 
-  const getSelectButtonProps = () => {
+  const getSelectInputProps = () => {
     return {
       className: [
-        CustomSelectStyle.selectButton,
+        CustomSelectStyle.selectInput,
         CustomSelectStyle[variant!],
       ].join(" "),
+      style: {
+        width: props.width && props.width + "px",
+      },
+      title: selectedLabel,
+      value: selectedLabel || "",
+      disabled: disabled,
       onClick: () => setIsOpen(!isOpen),
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleChangeSearch(e),
     };
   };
 
   return (
-    <div className={CustomSelectStyle.select}>
-      <button {...getSelectButtonProps()}>
-        {selectedLabel || placeholder}
-      </button>
+    <div className={CustomSelectStyle.select} aria-haspopup="true">
+      <input
+        {...getSelectInputProps()}
+        type="text"
+        placeholder={selectedLabel || placeholder}
+      />
+      <span
+        className={`${CustomSelectStyle.icon} ${
+          isOpen ? CustomSelectStyle.open : ""
+        }`}
+      >
+        {arrowDown}
+      </span>
       <ul
         className={CustomSelectStyle.selectOptions}
         style={isOpen ? { display: "block" } : { display: "none" }}
+        aria-label="submenu"
       >
-        {options &&
-          options.map((option) => (
-            <li {...getOptionProps(option)}>{option.label}</li>
+        {optionsMutation &&
+          optionsMutation.map((option, i) => (
+            <li {...getOptionProps(option, i)}>{option.label}</li>
           ))}
       </ul>
     </div>
   );
 }
+
 CustomSelect.defaultProps = {
   label: "",
   placeholder: "Please select",
