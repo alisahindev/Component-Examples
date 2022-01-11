@@ -1,5 +1,4 @@
 # Hi I'm Ali 
-Hello! I am Ali.
 
 This is a project that I created and continue to develop to learn more about repository form elements.
 
