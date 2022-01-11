@@ -47,6 +47,7 @@ function CustomSelect(props: RecommendedProps) {
     (e) => {
       if (!isOpen) {
         setIsOpen(true);
+        setSelectedIndex(0);
       }
       const _value = e.target.value;
       setSelectedLabel(_value);
@@ -55,7 +56,7 @@ function CustomSelect(props: RecommendedProps) {
       );
       setOptionsMutation(_option);
     },
-    [options, isOpen]
+    [options, isOpen, selectedIndex]
   );
 
   const scrollToIndex = React.useCallback((optionIndex: number) => {
