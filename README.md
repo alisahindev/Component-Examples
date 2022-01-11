@@ -1,6 +1,6 @@
 # Hi I'm Ali 
 
-This is a project that I created and continue to develop to learn more about repository form elements.
+This repository is a project I created and continue to develop to learn more about form elements.
 
 # Getting Started with Create React App
 
