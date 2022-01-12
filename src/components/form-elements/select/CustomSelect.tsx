@@ -34,7 +34,7 @@ function CustomSelect(props: RecommendedProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(value);
   const [selectedLabel, setSelectedLabel] = React.useState("" as string);
-  const [selectedIndex, setSelectedIndex] = React.useState<null | number>(null);
+  const [selectedIndex, setSelectedIndex] = React.useState<null | number>(0);
   const [optionsMutation, setOptionsMutation] = React.useState(options);
 
   const { arrowDown } = ArrowIcons();
@@ -54,13 +54,14 @@ function CustomSelect(props: RecommendedProps) {
       const _option = options?.filter((option) =>
         option.label.toLowerCase().includes(_value.toLowerCase())
       );
+      setSelectedIndex(0);
       setOptionsMutation(_option);
     },
     [options, isOpen, selectedIndex]
   );
 
   const scrollToIndex = React.useCallback((optionIndex: number) => {
-    if (optionIndex && optionIndex > -1) {
+    if ((optionIndex && optionIndex >= 0) || optionIndex === 0) {
       const element = document.querySelectorAll(`.${CustomSelectStyle.option}`)[
         optionIndex
       ];
@@ -83,23 +84,20 @@ function CustomSelect(props: RecommendedProps) {
     [selectedIndex, optionsMutation]
   );
 
-  const handleKeyDown: KeyboardEventHandler = React.useCallback(
-    (e) => {
-      if (e.key === "ArrowDown") {
-        selectedIndex === null || selectedIndex === optionsMutation!.length - 1
-          ? setSelectedIndex(0)
-          : setSelectedIndex((selectedIndex) => selectedIndex! + 1);
-      }
-    },
-    [selectedIndex, optionsMutation]
-  );
-
   const handleKeyUp: KeyboardEventHandler = React.useCallback(
     (e) => {
       if (e.key === "ArrowUp") {
+        setIsOpen(true);
         selectedIndex === null || selectedIndex === 0
           ? setSelectedIndex(optionsMutation!.length - 1)
           : setSelectedIndex((selectedIndex) => selectedIndex! - 1);
+      } else if (e.key === "ArrowDown") {
+        setIsOpen(true);
+        selectedIndex === null || selectedIndex === optionsMutation!.length - 1
+          ? setSelectedIndex(0)
+          : setSelectedIndex((selectedIndex) => selectedIndex! + 1);
+      } else if (e.key === "Escape") {
+        setIsOpen(false);
       }
     },
     [selectedIndex, optionsMutation]
@@ -137,7 +135,6 @@ function CustomSelect(props: RecommendedProps) {
       style: {
         width: props.width && props.width + "px",
       },
-      onKeyDown: handleKeyDown,
       onKeyUp: handleKeyUp,
       placeholder: selectedLabel || placeholder,
       title: selectedLabel,
