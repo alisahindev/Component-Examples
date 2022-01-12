@@ -1,6 +1,7 @@
 {
-  "name": "my-app",
-  "version": "0.1.0",
+  "name": "My Custom Form Components",
+  "description": "This repository is a project I created and continue to develop to learn more about form elements.  ",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.16.0",

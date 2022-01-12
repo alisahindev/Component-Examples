@@ -103,16 +103,13 @@ function CustomSelect(props: RecommendedProps) {
     [selectedIndex, optionsMutation]
   );
 
-  const handleSelect = React.useCallback(
-    (option: option, optionIndex) => {
-      setSelectedValue(option.value);
-      setSelectedLabel(option.label);
-      setSelectedIndex(optionIndex);
-      setIsOpen(false);
-      onChange(option.value);
-    },
-    [onChange]
-  );
+  const handleSelect = (option: option, optionIndex) => {
+    setSelectedValue(option.value);
+    setSelectedLabel(option.label);
+    setSelectedIndex(optionIndex);
+    setIsOpen(false);
+    onChange(option.value);
+  };
 
   const getOptionProps = (option: option, i: any) => {
     return {
@@ -141,8 +138,10 @@ function CustomSelect(props: RecommendedProps) {
       value: selectedLabel || "",
       disabled: disabled,
       onClick: () => setIsOpen(!isOpen),
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        handleChangeSearch(e),
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleChangeSearch(e);
+        onChange(e.target.value);
+      },
     };
   };
 

@@ -110,8 +110,12 @@ function App() {
     { label: "Monty Python and the Holy Grail", value: 1975 },
   ];
   return (
-    <div className="App">
-      <CustomSelect options={arr} />
+    <div className='App'>
+      <CustomSelect
+        variant='warning'
+        onChange={(value) => console.log(value)}
+        options={arr}
+      />
     </div>
   );
 }
