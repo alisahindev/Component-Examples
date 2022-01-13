@@ -84,7 +84,7 @@ function CustomSelect(props: RecommendedProps) {
     [selectedIndex, optionsMutation]
   );
 
-  const handleKeyUp: KeyboardEventHandler = React.useCallback(
+  const handleKeyDown: KeyboardEventHandler = React.useCallback(
     (e) => {
       if (e.key === "ArrowUp") {
         setIsOpen(true);
@@ -132,7 +132,7 @@ function CustomSelect(props: RecommendedProps) {
       style: {
         width: props.width && props.width + "px",
       },
-      onKeyUp: handleKeyUp,
+      onKeyDown: handleKeyDown,
       placeholder: selectedLabel || placeholder,
       title: selectedLabel,
       value: selectedLabel || "",
