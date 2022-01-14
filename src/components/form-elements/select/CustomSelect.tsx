@@ -18,6 +18,7 @@ type RecommendedProps = {
   disabled?: boolean;
   variant?: variants;
   width?: string;
+  style?: React.CSSProperties;
 };
 
 function CustomSelect(props: RecommendedProps) {
@@ -29,20 +30,26 @@ function CustomSelect(props: RecommendedProps) {
     onChange,
     disabled,
     variant,
+    width,
+    style,
   } = props;
 
+  // Define the states of the component
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(value);
   const [selectedLabel, setSelectedLabel] = React.useState("" as string);
   const [selectedIndex, setSelectedIndex] = React.useState<null | number>(0);
   const [optionsMutation, setOptionsMutation] = React.useState(options);
 
+  // Import the select icon from special hook
   const { arrowDown } = ArrowIcons();
 
+  // From scroll to the selected option
   useEffect(() => {
     scrollToIndex(selectedIndex!);
   }, [selectedIndex, optionsMutation]);
 
+  // Handle Change Search from the input for search options
   const handleChangeSearch = React.useCallback(
     (e) => {
       if (!isOpen) {
@@ -60,6 +67,7 @@ function CustomSelect(props: RecommendedProps) {
     [options, isOpen, selectedIndex]
   );
 
+  // Function for scroll to the selected option
   const scrollToIndex = React.useCallback((optionIndex: number) => {
     if ((optionIndex && optionIndex >= 0) || optionIndex === 0) {
       const element = document.querySelectorAll(`.${CustomSelectStyle.option}`)[
@@ -73,20 +81,14 @@ function CustomSelect(props: RecommendedProps) {
     }
   }, []);
 
-  const handleOnKeyPress: KeyboardEventHandler = React.useCallback(
+  // Handle keyboard events for the select element (arrows, enter, esc)
+  const handleKeyDown: KeyboardEventHandler = React.useCallback(
     (e) => {
       if (e.key === "Enter") {
         setSelectedLabel(optionsMutation![selectedIndex!].label);
         setSelectedValue(optionsMutation![selectedIndex!].value);
         setIsOpen((isOpen) => !isOpen);
-      }
-    },
-    [selectedIndex, optionsMutation]
-  );
-
-  const handleKeyDown: KeyboardEventHandler = React.useCallback(
-    (e) => {
-      if (e.key === "ArrowUp") {
+      } else if (e.key === "ArrowUp") {
         setIsOpen(true);
         selectedIndex === null || selectedIndex === 0
           ? setSelectedIndex(optionsMutation!.length - 1)
@@ -103,6 +105,7 @@ function CustomSelect(props: RecommendedProps) {
     [selectedIndex, optionsMutation]
   );
 
+  // Handle click events for the select element
   const handleSelect = (option: option, optionIndex) => {
     setSelectedValue(option.value);
     setSelectedLabel(option.label);
@@ -111,6 +114,7 @@ function CustomSelect(props: RecommendedProps) {
     onChange(option.value);
   };
 
+  // Get Option Props for the select element (key, title, role, arias, onlick)
   const getOptionProps = (option: option, i: any) => {
     return {
       key: `${option.value}-${i}`,
@@ -123,6 +127,7 @@ function CustomSelect(props: RecommendedProps) {
     };
   };
 
+  // Get Select Input Props for the select element (className, placeholder, value, onChange, onKeyDown, style)
   const getSelectInputProps = () => {
     return {
       className: [
@@ -130,7 +135,8 @@ function CustomSelect(props: RecommendedProps) {
         CustomSelectStyle[variant!],
       ].join(" "),
       style: {
-        width: props.width && props.width + "px",
+        width: width && width + "px",
+        ...style,
       },
       onKeyDown: handleKeyDown,
       placeholder: selectedLabel || placeholder,
@@ -145,6 +151,7 @@ function CustomSelect(props: RecommendedProps) {
     };
   };
 
+  // Return the select element
   return (
     <div
       className={CustomSelectStyle.select}
@@ -159,12 +166,7 @@ function CustomSelect(props: RecommendedProps) {
       >
         {arrowDown}
       </label>
-      <input
-        {...getSelectInputProps()}
-        type='text'
-        id='select'
-        onKeyPress={(e) => handleOnKeyPress(e)}
-      />
+      <input {...getSelectInputProps()} type='text' id='select' />
 
       <ul
         className={CustomSelectStyle.selectOptions}
@@ -191,6 +193,7 @@ function CustomSelect(props: RecommendedProps) {
   );
 }
 
+// Define the default props
 CustomSelect.defaultProps = {
   label: "",
   placeholder: "Please select",
