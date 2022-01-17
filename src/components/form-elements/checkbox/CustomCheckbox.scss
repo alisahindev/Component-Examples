@@ -1,0 +1,72 @@
+$primary: #0070ba;
+$secondary: #e7e7e7;
+$success: #9fd700;
+$warning: #ffcc00;
+$danger: #ff3b30;
+$info: #4d90fe;
+$inverse: #515c6d;
+$facebook: #3b5998;
+$twitter: #00aced;
+$google: #dd4b39;
+$linkedin: #007bb6;
+$pinterest: #cb2027;
+$youtube: #bb0000;
+$tumblr: #32506d;
+$vk: #45668e;
+$github: #444444;
+$dribbble: #ea4c89;
+$dropbox: #3d9ae8;
+$instagram: #517fa4;
+$skype: #00aff0;
+$yahoo: #410093;
+$reddit: #ff4500;
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  &-icon {
+    color: $primary;
+  }
+  .checkmark {
+    position: absolute;
+    left: 0.5rem;
+    min-height: 1.25rem;
+    min-width: 1.25rem;
+    max-height: 1.25rem;
+    max-width: 1.25rem;
+    border-radius: 4px;
+    border: 1px solid rgba($primary, 0.5);
+    &.checked {
+      box-shadow: 0 0 2px 0 rgba($primary, 0.5);
+    }
+    &-icon {
+      color: $primary;
+    }
+  }
+
+  &:hover {
+    .checkmark {
+      box-shadow: 0 0 4px 0 rgba($primary, 0.5);
+    }
+    transition: all 0.2s ease-in-out;
+  }
+}

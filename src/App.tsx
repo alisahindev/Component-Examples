@@ -1,5 +1,6 @@
 import React from "react";
-import "./App.css";
+import "./assets/styles/global.scss";
+import CustomCheckbox from "./components/form-elements/checkbox/CustomCheckbox";
 import CustomSelect from "./components/form-elements/select/CustomSelect";
 
 function App() {
@@ -111,10 +112,12 @@ function App() {
   ];
   return (
     <div className='App'>
-      <CustomSelect
-        variant='warning'
-        onChange={(value) => console.log(value)}
-        options={arr}
+      <CustomSelect onChange={(value) => console.log(value)} options={arr} />
+      <CustomCheckbox
+        handleChange={(value) => console.log(value)}
+        label='Buraya tıklarsan olur'
+        value={25}
+        disabled={false}
       />
     </div>
   );

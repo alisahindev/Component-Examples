@@ -1,5 +1,5 @@
 import React, { KeyboardEventHandler, useEffect } from "react";
-import CustomSelectStyle from "./CustomSelect.module.scss";
+import "./CustomSelect.scss";
 import { ArrowIcons } from "./ArrowIcons";
 
 type option = {
@@ -70,9 +70,7 @@ function CustomSelect(props: RecommendedProps) {
   // Function for scroll to the selected option
   const scrollToIndex = React.useCallback((optionIndex: number) => {
     if ((optionIndex && optionIndex >= 0) || optionIndex === 0) {
-      const element = document.querySelectorAll(`.${CustomSelectStyle.option}`)[
-        optionIndex
-      ];
+      const element = document.querySelectorAll(`.option`)[optionIndex];
       if (element) {
         element.scrollIntoView({
           block: "nearest",
@@ -130,10 +128,9 @@ function CustomSelect(props: RecommendedProps) {
   // Get Select Input Props for the select element (className, placeholder, value, onChange, onKeyDown, style)
   const getSelectInputProps = () => {
     return {
-      className: [
-        CustomSelectStyle.selectInput,
-        CustomSelectStyle[variant!],
-      ].join(" "),
+      className: ["select-input", variant && `select-input--${variant}`].join(
+        " "
+      ),
       style: {
         width: width && width + "px",
         ...style,
@@ -153,23 +150,14 @@ function CustomSelect(props: RecommendedProps) {
 
   // Return the select element
   return (
-    <div
-      className={CustomSelectStyle.select}
-      aria-haspopup='true'
-      aria-autocomplete='list'
-    >
-      <label
-        htmlFor='select'
-        className={`${CustomSelectStyle.icon} ${
-          isOpen ? CustomSelectStyle.open : ""
-        }`}
-      >
+    <div className='select' aria-haspopup='true' aria-autocomplete='list'>
+      <label htmlFor='select' className={`icon ${isOpen ? "open" : ""}`}>
         {arrowDown}
       </label>
       <input {...getSelectInputProps()} type='text' id='select' />
 
       <ul
-        className={CustomSelectStyle.selectOptions}
+        className='select-options'
         style={isOpen ? { display: "block" } : { display: "none" }}
         aria-label='submenu'
         role='listbox'
@@ -180,9 +168,9 @@ function CustomSelect(props: RecommendedProps) {
             return (
               <li
                 {...getOptionProps(option, optionIndex)}
-                className={`${CustomSelectStyle.option} 
+                className={`option 
                 ${className ? className : ""} 
-                ${isSelected ? CustomSelectStyle.selected : ""}`}
+                ${isSelected ? "selected" : ""}`}
               >
                 {option.label}
               </li>
