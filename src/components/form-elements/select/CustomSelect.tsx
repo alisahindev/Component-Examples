@@ -85,6 +85,10 @@ function CustomSelect(props: RecommendedProps) {
       if (e.key === "Enter") {
         setSelectedLabel(optionsMutation![selectedIndex!].label);
         setSelectedValue(optionsMutation![selectedIndex!].value);
+        handleChange(
+          optionsMutation![selectedIndex!].value,
+          optionsMutation![selectedIndex!]
+        );
         setIsOpen((isOpen) => !isOpen);
       } else if (e.key === "ArrowUp") {
         setIsOpen(true);
@@ -105,11 +109,11 @@ function CustomSelect(props: RecommendedProps) {
 
   // Handle click events for the select element
   const handleSelect = (option: option, optionIndex) => {
+    handleChange(option.value, option);
     setSelectedValue(option.value);
     setSelectedLabel(option.label);
     setSelectedIndex(optionIndex);
     setIsOpen(false);
-    handleChange(option.value, option);
   };
 
   // Get Option Props for the select element (key, title, role, arias, onlick)

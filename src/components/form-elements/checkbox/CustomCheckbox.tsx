@@ -34,7 +34,7 @@ const CustomCheckbox = (props: CustomCheckboxProps) => {
   };
 
   return (
-    <div>
+    <div className='custom-checkbox-container'>
       <label className={`custom-checkbox ${disabled ? "disabled" : ""}`}>
         <input {...getInputProps()} />
         {label}
