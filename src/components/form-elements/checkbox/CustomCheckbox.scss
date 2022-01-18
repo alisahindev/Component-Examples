@@ -31,11 +31,6 @@ $reddit: #ff4500;
   cursor: pointer;
   user-select: none;
 
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-
   &-input {
     position: absolute;
     opacity: 0;
@@ -68,5 +63,19 @@ $reddit: #ff4500;
       box-shadow: 0 0 4px 0 rgba($primary, 0.5);
     }
     transition: all 0.2s ease-in-out;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    .checkmark {
+      background-color: rgba($inverse, 0.5);
+      transform: unset;
+    }
+    &:hover {
+      .checkmark {
+        box-shadow: unset;
+      }
+    }
   }
 }

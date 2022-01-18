@@ -18,7 +18,7 @@ const CustomCheckbox = (props: CustomCheckboxProps) => {
   const getInputProps = () => {
     return {
       type: "checkbox",
-      className: `custom-checkbox-input ${disabled ? "disabled" : ""}`,
+      className: `custom-checkbox-input`,
       value: value!,
       id: label,
       onChange: (e) => {
@@ -27,15 +27,15 @@ const CustomCheckbox = (props: CustomCheckboxProps) => {
       },
       checked: checked,
       disabled: disabled,
-      ariaLabel: label,
-      ariaChecked: checked,
+      "aria-label": label,
+      "aria-checked": checked,
       style,
     };
   };
 
   return (
     <div>
-      <label className='custom-checkbox'>
+      <label className={`custom-checkbox ${disabled ? "disabled" : ""}`}>
         <input {...getInputProps()} />
         {label}
 

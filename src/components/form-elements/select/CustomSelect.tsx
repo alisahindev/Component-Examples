@@ -11,7 +11,7 @@ type variants = "primary" | "secondary" | "success" | "danger" | "warning";
 
 type RecommendedProps = {
   options?: option[];
-  onChange: (value: any) => void;
+  handleChange: (value: any, obj: object) => void;
   value?: string | number;
   placeholder?: string;
   className?: string;
@@ -27,7 +27,7 @@ function CustomSelect(props: RecommendedProps) {
     placeholder,
     options,
     value,
-    onChange,
+    handleChange,
     disabled,
     variant,
     width,
@@ -109,7 +109,7 @@ function CustomSelect(props: RecommendedProps) {
     setSelectedLabel(option.label);
     setSelectedIndex(optionIndex);
     setIsOpen(false);
-    onChange(option.value);
+    handleChange(option.value, option);
   };
 
   // Get Option Props for the select element (key, title, role, arias, onlick)
@@ -143,7 +143,6 @@ function CustomSelect(props: RecommendedProps) {
       onClick: () => setIsOpen(!isOpen),
       onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
         handleChangeSearch(e);
-        onChange(e.target.value);
       },
     };
   };
@@ -187,7 +186,7 @@ CustomSelect.defaultProps = {
   placeholder: "Please select",
   options: [],
   value: "",
-  onChange: () => {},
+  handleChange: () => {},
   disabled: false,
 };
 

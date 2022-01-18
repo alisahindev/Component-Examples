@@ -112,12 +112,14 @@ function App() {
   ];
   return (
     <div className='App'>
-      <CustomSelect onChange={(value) => console.log(value)} options={arr} />
+      <CustomSelect
+        handleChange={(value, obj) => console.log(value, obj)}
+        options={arr}
+      />
       <CustomCheckbox
         handleChange={(value) => console.log(value)}
         label='Buraya tıklarsan olur'
         value={25}
-        disabled={false}
       />
     </div>
   );
