@@ -83,12 +83,14 @@ function CustomSelect(props: RecommendedProps) {
   const handleKeyDown: KeyboardEventHandler = React.useCallback(
     (e) => {
       if (e.key === "Enter") {
-        setSelectedLabel(optionsMutation![selectedIndex!].label);
-        setSelectedValue(optionsMutation![selectedIndex!].value);
-        handleChange(
-          optionsMutation![selectedIndex!].value,
-          optionsMutation![selectedIndex!]
-        );
+        if (selectedIndex !== -1) {
+          setSelectedLabel(optionsMutation![selectedIndex!].label);
+          setSelectedValue(optionsMutation![selectedIndex!].value);
+          handleChange(
+            optionsMutation![selectedIndex!].value,
+            optionsMutation![selectedIndex!]
+          );
+        }
         setIsOpen((isOpen) => !isOpen);
       } else if (e.key === "ArrowUp") {
         setIsOpen(true);
@@ -101,6 +103,9 @@ function CustomSelect(props: RecommendedProps) {
           ? setSelectedIndex(0)
           : setSelectedIndex((selectedIndex) => selectedIndex! + 1);
       } else if (e.key === "Escape") {
+        setSelectedIndex(
+          optionsMutation!.findIndex((option) => option.value === selectedValue)
+        );
         setIsOpen(false);
       }
     },
